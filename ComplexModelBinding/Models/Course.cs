@@ -28,4 +28,22 @@ namespace ComplexModelBinding.Models
         /// </summary>
         public Instructor Instructor { get; set; }
     }
+
+    public class CourseCreateViewModel
+    {
+        /// <summary>
+        /// The Courses title
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// A brief description of the Course
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// A list containing all Instructors in the DB
+        /// </summary>
+        public List<Instructor> AllInstructors { get; set; }
+    }
 }
