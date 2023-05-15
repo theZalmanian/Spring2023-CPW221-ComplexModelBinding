@@ -48,7 +48,13 @@ namespace ComplexModelBinding.Controllers
         // GET: Courses/Create
         public IActionResult Create()
         {
-            return View();
+            // Create an instance of the Create VM
+            CourseCreateViewModel viewModel = new();
+
+            // Add all Instructors in DB to view model
+            viewModel.AllInstructors = _context.Instructors.OrderBy(instructor => instructor.FullName).ToList();
+            
+            return View(viewModel);
         }
 
         // POST: Courses/Create
