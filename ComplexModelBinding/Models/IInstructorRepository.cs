@@ -1,5 +1,6 @@
 ﻿using ComplexModelBinding.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 
 namespace ComplexModelBinding.Models
 {
@@ -40,6 +41,17 @@ namespace ComplexModelBinding.Models
             // If the given instructor is not null
             if(instructor != null)
             {
+                // Setup DB connection
+                using DbConnection connection = _context.Database.GetDbConnection();
+                await connection.OpenAsync();
+
+                // Setup RAW SQL command to Update all Courses taught by that Instructor to have a null Instructor
+                using DbCommand updateCourses = connection.CreateCommand();
+                updateCourses.CommandText = "UPDATE Courses SET InstructorID = null " +
+                                            "WHERE InstructorID = " + instructor.ID; 
+
+                await updateCourses.ExecuteNonQueryAsync();
+
                 // Remove that Instructor from the database 
                 _context.Instructors.Remove(instructor);
                 await _context.SaveChangesAsync();

@@ -101,7 +101,7 @@ namespace ComplexModelBinding.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!InstructorExists(instructor.ID))
+                    if (!await InstructorExists(instructor.ID))
                     {
                         return NotFound();
                     }
