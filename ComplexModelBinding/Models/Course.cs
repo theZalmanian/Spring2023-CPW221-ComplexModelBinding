@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace ComplexModelBinding.Models
@@ -28,6 +29,32 @@ namespace ComplexModelBinding.Models
         /// The Instructor teaching the Course
         /// </summary>
         public Instructor Instructor { get; set; }
+    }
+
+    public class CourseIndexViewModel
+    {
+        /// <summary>
+        /// The Courses Primary Key
+        /// </summary>
+        public int CourseID { get; set; }
+
+        /// <summary>
+        /// The Courses title
+        /// </summary>
+        [DisplayName("Course Title")]
+        public string CourseTitle { get; set; }
+
+        /// <summary>
+        /// The Instructor's full legal name
+        /// </summary>
+        [DisplayName("Instructor")]
+        public string InstructorFullName { get; set; }
+
+        /// <summary>
+        /// A brief description of the Course
+        /// </summary>
+        [DisplayName("Description")]
+        public string CourseDescription { get; set; }
     }
 
     public class CourseCreateViewModel

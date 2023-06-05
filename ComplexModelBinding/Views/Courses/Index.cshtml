@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ComplexModelBinding.Models.Course>
+﻿@model IEnumerable<CourseIndexViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,29 +13,35 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                @Html.DisplayNameFor(model => model.CourseTitle)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.InstructorFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseDescription)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InstructorFullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseDescription)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CourseID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CourseID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CourseID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

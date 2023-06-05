@@ -22,9 +22,21 @@ namespace ComplexModelBinding.Controllers
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-              return _context.Courses != null ? 
-                          View(await _context.Courses.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Courses'  is null.");
+            // Get all Courses from the DB, including their Instructor
+            List<CourseIndexViewModel> allCourses = await (from course in _context.Courses
+                                                    join instructor in _context.Instructors
+                                                        on course.Instructor.ID equals instructor.ID
+                                                    orderby course.Title
+                                                    select new CourseIndexViewModel
+                                                    {
+                                                        CourseID = course.ID,
+                                                        CourseTitle = course.Title,
+                                                        InstructorFullName = instructor.FullName,
+                                                        CourseDescription = course.Description,
+                                                    }).ToListAsync();
+
+            // Display then on the Index page
+            return View(allCourses);
         }
 
         // GET: Courses/Details/5
@@ -78,7 +90,7 @@ namespace ComplexModelBinding.Controllers
                     }
                 }; 
 
-                // tekk EF that the instructor is an existing instructor
+                // tell EF that the instructor is an existing instructor
                 _context.Entry(newCourse.Instructor).State = EntityState.Unchanged;
 
                 // Add the course to the db
