@@ -45,5 +45,10 @@ namespace ComplexModelBinding.Models
         /// A list containing all Instructors in the DB
         /// </summary>
         public List<Instructor> AllInstructors { get; set; }
+
+        /// <summary>
+        /// The selected Instructer for that course
+        /// </summary>
+        public Instructor SelectedInstructor { get; set; }
     }
 }
