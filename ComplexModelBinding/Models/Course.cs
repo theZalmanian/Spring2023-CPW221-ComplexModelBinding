@@ -51,6 +51,6 @@ namespace ComplexModelBinding.Models
         /// <summary>
         /// The ID of the selected Instructer for that course
         /// </summary>
-        public int SelectedInstructor { get; set; }
+        public int SelectedInstructorID { get; set; }
     }
 }

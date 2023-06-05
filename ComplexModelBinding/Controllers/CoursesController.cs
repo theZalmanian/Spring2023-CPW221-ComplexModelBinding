@@ -62,15 +62,34 @@ namespace ComplexModelBinding.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,Description")] Course course)
+        public async Task<IActionResult> Create(CourseCreateViewModel givenCourse)
         {
+            // If all data is valid
             if (ModelState.IsValid)
             {
-                _context.Add(course);
+                // Create a course object with all the given data
+                Course newCourse = new()
+                {
+                    Title = givenCourse.Title,
+                    Description = givenCourse.Description,
+                    Instructor = new Instructor()
+                    {
+                        ID = givenCourse.SelectedInstructorID
+                    }
+                }; 
+
+                // tekk EF that the instructor is an existing instructor
+                _context.Entry(newCourse.Instructor).State = EntityState.Unchanged;
+
+                // Add the course to the db
+                _context.Add(newCourse);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(course);
+            
+            // Otherwise, repopulate the vm with all instructors in the DB
+            givenCourse.AllInstructors = _context.Instructors.OrderBy(instructor => instructor.FullName).ToList();
+            return View(givenCourse);
         }
 
         // GET: Courses/Edit/5
