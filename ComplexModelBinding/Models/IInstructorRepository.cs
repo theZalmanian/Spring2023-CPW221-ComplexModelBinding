@@ -5,7 +5,7 @@ namespace ComplexModelBinding.Models
 {
     public interface IInstructorRepository
     {
-        Task SaveInstructor(Instructor instructor);
+        Task AddInstructor(Instructor instructor);
         Task<IEnumerable<Instructor>> GetAllInstructors();
         Task DeleteInstructor (int instructorID);
         Task UpdateInstructor (Instructor instructor);
@@ -72,7 +72,7 @@ namespace ComplexModelBinding.Models
         /// Adds the given Instructor to the DB
         /// </summary>
         /// <param name="instructor">The Instructor being added to the DB</param>
-        public async Task SaveInstructor(Instructor instructor)
+        public async Task AddInstructor(Instructor instructor)
         {
             _context.Instructors.Add(instructor); 
             await _context.SaveChangesAsync();

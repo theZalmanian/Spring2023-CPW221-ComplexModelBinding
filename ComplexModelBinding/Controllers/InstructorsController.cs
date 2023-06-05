@@ -12,31 +12,29 @@ namespace ComplexModelBinding.Controllers
 {
     public class InstructorsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IInstructorRepository _instructorRepo;
 
-        public InstructorsController(ApplicationDbContext context)
+        public InstructorsController(IInstructorRepository instructorRepo)
         {
-            _context = context;
+            _instructorRepo = instructorRepo;
         }
 
         // GET: Instructors
         public async Task<IActionResult> Index()
         {
-              return _context.Instructors != null ? 
-                          View(await _context.Instructors.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Instructors'  is null.");
+            return View(await _instructorRepo.GetAllInstructors());
         }
 
         // GET: Instructors/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Instructors == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var instructor = await _context.Instructors
-                .FirstOrDefaultAsync(m => m.ID == id);
+            Instructor instructor = await _instructorRepo.GetInstructor(id.Value);
+
             if (instructor == null)
             {
                 return NotFound();
@@ -60,8 +58,7 @@ namespace ComplexModelBinding.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(instructor);
-                await _context.SaveChangesAsync();
+                await _instructorRepo.AddInstructor(instructor);
                 return RedirectToAction(nameof(Index));
             }
             return View(instructor);
@@ -70,12 +67,13 @@ namespace ComplexModelBinding.Controllers
         // GET: Instructors/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Instructors == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var instructor = await _context.Instructors.FindAsync(id);
+            Instructor instructor = await _instructorRepo.GetInstructor(id.Value);
+
             if (instructor == null)
             {
                 return NotFound();
@@ -99,8 +97,7 @@ namespace ComplexModelBinding.Controllers
             {
                 try
                 {
-                    _context.Update(instructor);
-                    await _context.SaveChangesAsync();
+                    _instructorRepo.UpdateInstructor(instructor);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -121,13 +118,13 @@ namespace ComplexModelBinding.Controllers
         // GET: Instructors/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Instructors == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var instructor = await _context.Instructors
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var instructor = await _instructorRepo.GetInstructor(id.Value);
+
             if (instructor == null)
             {
                 return NotFound();
@@ -141,23 +138,20 @@ namespace ComplexModelBinding.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Instructors == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Instructors'  is null.");
-            }
-            var instructor = await _context.Instructors.FindAsync(id);
-            if (instructor != null)
-            {
-                _context.Instructors.Remove(instructor);
-            }
+            // Get the given Instructor from the DB
+            Instructor givenInstructor = await _instructorRepo.GetInstructor(id);
             
-            await _context.SaveChangesAsync();
+            if (givenInstructor != null)
+            {
+                _instructorRepo.DeleteInstructor(givenInstructor.ID);
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool InstructorExists(int id)
+        private async Task<bool> InstructorExists(int id)
         {
-          return (_context.Instructors?.Any(e => e.ID == id)).GetValueOrDefault();
+            return await _instructorRepo.GetInstructor(id) != null;
         }
     }
 }
