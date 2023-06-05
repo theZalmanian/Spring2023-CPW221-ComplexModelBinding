@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace ComplexModelBinding.Models
 {
@@ -44,11 +45,12 @@ namespace ComplexModelBinding.Models
         /// <summary>
         /// A list containing all Instructors in the DB
         /// </summary>
+        [ValidateNever]
         public List<Instructor> AllInstructors { get; set; }
 
         /// <summary>
-        /// The selected Instructer for that course
+        /// The ID of the selected Instructer for that course
         /// </summary>
-        public Instructor SelectedInstructor { get; set; }
+        public int SelectedInstructor { get; set; }
     }
 }
